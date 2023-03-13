@@ -61,6 +61,7 @@ public class TransactionServiceImpl implements TransactionService {
     private void executeBalanceAndUpdateIfRequired(BigDecimal amount, Account sender, Account receiver) {
         if (checkSenderBalance(sender, amount)){
             sender.setBalance(sender.getBalance().subtract(amount));
+            receiver.setBalance(receiver.getBalance().add(amount));
         }else{
             throw new BalanceNotSufficientException("Balance is not enough for this transfer");
         }
@@ -79,9 +80,9 @@ public class TransactionServiceImpl implements TransactionService {
 
         // a logic like:
 //        if(oneOfTheAccountIsSaving && userIdIsDifferent)
-        if ((sender.getAccountType().equals(AccountType.SAVING) || receiver.getAccountType().equals(AccountType.SAVING))
-        && !sender.getUserId().equals(receiver.getUserId())){
-            throw new AccountOwnershipException("Since you are using a saving account, the sender and receiver userId must be the same!");
+        if((sender.getAccountType().equals(AccountType.SAVING)||receiver.getAccountType().equals(AccountType.SAVING))
+                && !sender.getUserId().equals(receiver.getUserId())){
+            throw new AccountOwnershipException("Since you are using a savings account, the sender and receiver userId must be the same.");
         }
     }
 

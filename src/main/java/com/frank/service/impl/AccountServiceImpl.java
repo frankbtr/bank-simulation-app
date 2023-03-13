@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Component
 public class AccountServiceImpl implements AccountService {
 
     //it is a good practice use private final!
@@ -31,7 +32,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> listOfAccount() {
+    public List<Account> listAllAccount() {
         return accountRepository.findAll();
     }
 }
