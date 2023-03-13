@@ -1,5 +1,7 @@
 package com.frank.service.impl;
 
+import com.frank.enums.AccountType;
+import com.frank.exceptions.AccountOwnershipException;
 import com.frank.exceptions.BadRequestException;
 import com.frank.model.Account;
 import com.frank.model.Transaction;
@@ -29,7 +31,26 @@ public class TransactionServiceImpl implements TransactionService {
             -if sender has enough balance?
             -if both accounts are checking, if not, one of them saving, it needs to be same userId
          */
+        validateAccount(sender, receiver);
+        checkAccountOwnership(sender, receiver);
+
+
         return null;
+
+    }
+
+    private void checkAccountOwnership(Account sender, Account receiver) {
+        /*
+            write an if statement checks if one of the account is saving,
+            and user of sender and receiver is not the same, throw AccountOwnershipException
+         */
+
+        // a logic like:
+//        if(oneOfTheAccountIsSaving && userIdIsDifferent)
+        if ((sender.getAccountType().equals(AccountType.SAVING) || receiver.getAccountType().equals(AccountType.SAVING))
+        && !sender.getUserId().equals(receiver.getUserId())){
+            throw new AccountOwnershipException("Since you are using a saving account, the sender and receiver userId must be the same!");
+        }
     }
 
     private void validateAccount(Account sender, Account receiver){
