@@ -4,12 +4,13 @@ import com.frank.enums.AccountType;
 import com.frank.exceptions.RecordNotFoundException;
 import com.frank.model.Account;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@ComponentScan
+@Component
 public class AccountRepository {
 
     public static List<Account> accountList = new ArrayList<>();
