@@ -1,6 +1,7 @@
 package com.frank.repository;
 
 import com.frank.enums.AccountType;
+import com.frank.exceptions.RecordNotFoundException;
 import com.frank.model.Account;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -24,7 +25,8 @@ public class AccountRepository {
 
     public Account findById(UUID id) {
         //write a method that find the account inside the list, if not throws RecordNotFoundException
-        return null;
-        //use stream
+        return accountList.stream()
+                .filter(account -> account.getId().equals(id))
+                .findAny().orElseThrow(() -> new RecordNotFoundException("Account not exist in the database"));
     }
 }
