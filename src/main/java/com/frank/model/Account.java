@@ -1,5 +1,6 @@
 package com.frank.model;
 
+import com.frank.enums.AccountStatus;
 import com.frank.enums.AccountType;
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +17,5 @@ public class Account {
     private Date creationDate;
     private Long userId;
     private AccountType accountType;
+    private AccountStatus accountStatus;
 }

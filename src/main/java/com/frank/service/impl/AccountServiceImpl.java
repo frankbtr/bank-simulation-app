@@ -1,5 +1,6 @@
 package com.frank.service.impl;
 
+import com.frank.enums.AccountStatus;
 import com.frank.enums.AccountType;
 import com.frank.model.Account;
 import com.frank.repository.AccountRepository;
@@ -25,7 +26,8 @@ public class AccountServiceImpl implements AccountService {
     public Account createNewAccount(BigDecimal balance, Date creationDate, AccountType accountType, Long userId) {
         //we need to create Account object;
         Account account = Account.builder().id(UUID.randomUUID())
-                .userId(userId).balance(balance).accountType(accountType).creationDate(creationDate).build();
+                .userId(userId).balance(balance).accountType(accountType).creationDate(creationDate)
+                .accountStatus(AccountStatus.ACTIVE).build();
         //save into the database(repository)
         //return the object created
         return accountRepository.save(account);

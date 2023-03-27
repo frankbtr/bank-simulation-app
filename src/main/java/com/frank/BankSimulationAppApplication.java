@@ -23,8 +23,11 @@ public class BankSimulationAppApplication {
 
         //create 2 account sender and receiver
         Account sender = accountService.createNewAccount(BigDecimal.valueOf(70), new Date(), AccountType.CHECKING, 1L);
-        Account receiver = accountService.createNewAccount(BigDecimal.valueOf(50), new Date(), AccountType.CHECKING, 1L);
-        Account receiver2 = null;
+        Account receiver = accountService.createNewAccount(BigDecimal.valueOf(50), new Date(), AccountType.SAVING, 1L);
+        Account receiver2 = accountService.createNewAccount(BigDecimal.valueOf(50), new Date(), AccountType.SAVING, 11L);
+        Account sender2 = accountService.createNewAccount(BigDecimal.valueOf(50), new Date(), AccountType.SAVING, 22L);
+
+
 
         accountService.listAllAccount().forEach(System.out::println);
 
