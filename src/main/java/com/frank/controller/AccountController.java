@@ -1,9 +1,15 @@
 package com.frank.controller;
 
+import com.frank.enums.AccountType;
+import com.frank.model.Account;
 import com.frank.service.AccountService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.Date;
 
 @Controller
 public class AccountController {
@@ -22,14 +28,20 @@ public class AccountController {
     }
 
     @GetMapping("/create-form")
-    public String createAccount(){
+    public String createAccount(Model model){
         //empty account object provided
-        //account type enum needs to fill dropdown
+        model.addAttribute("account", Account.builder().build());
+        //accountType enum needs to fill dropdown
+        model.addAttribute("accountTypes", AccountType.values());
+
         return "account/create-account";
+    }
 
+    @PostMapping("/create")
+    public String createAccount(@ModelAttribute("account") Account account){
 
-        //create method to capture information from UI,
-        //print them on the console
-        //trigger createAccount method, create the account based on use input
+        System.out.println(account);
+        accountService.createNewAccount(account.getBalance(), new Date(), account.getAccountType(), account.getUserId());
+        return "redirect:/index";
     }
 }
