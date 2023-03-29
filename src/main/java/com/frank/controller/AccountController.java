@@ -56,4 +56,11 @@ public class AccountController {
         accountService.deleteAccount(id);
         return "redirect:/index";
     }
+
+    @GetMapping("/activate/{id}")
+    public String activateAccount(@PathVariable("id") UUID id){
+        System.out.println(id);
+        accountService.activateAccount(id);
+        return "redirect:/index";
+    }
 }
