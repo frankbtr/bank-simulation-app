@@ -52,4 +52,9 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(id);
         account.setAccountStatus(AccountStatus.ACTIVE);
     }
+
+    @Override
+    public Account retrieveById(UUID Id) {
+        return accountRepository.findById(Id);
+    }
 }
