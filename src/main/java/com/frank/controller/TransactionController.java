@@ -6,11 +6,13 @@ import com.frank.service.AccountService;
 import com.frank.service.TransactionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.UUID;
 
@@ -43,7 +45,13 @@ public class TransactionController {
     //Write a post method, that takes transaction object from the method above
     //complete the make transfer and return the message
     @PostMapping("/transfer")
-    public String postMakeTransfer(@ModelAttribute("transaction") Transaction transaction){
+    public String postMakeTransfer(@Valid @ModelAttribute("transaction") Transaction transaction, BindingResult bindingResult, Model model){
+
+        if (bindingResult.hasErrors()){
+            model.addAttribute("accounts", accountService.listAllAccount());
+            return "transaction/make-transfer";
+        }
+
 
         // I have UUID and accounts, but I need to provide Account object!
         // I need to find Accounts based on the ID that I have and use a parameters to makeTransfer
