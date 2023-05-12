@@ -1,7 +1,7 @@
 package com.frank.controller;
 
+import com.frank.dto.AccountDTO;
 import com.frank.enums.AccountType;
-import com.frank.model.Account;
 import com.frank.service.AccountService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +34,7 @@ public class AccountController {
     @GetMapping("/create-form")
     public String createAccount(Model model){
         //empty account object provided
-        model.addAttribute("account", Account.builder().build());
+        model.addAttribute("account", AccountDTO.builder().build());
         //accountType enum needs to fill dropdown
         model.addAttribute("accountTypes", AccountType.values());
 
@@ -42,7 +42,7 @@ public class AccountController {
     }
 
     @PostMapping("/create")
-    public String createAccount(@Valid @ModelAttribute("account") Account account, BindingResult bindingResult, Model model ){
+    public String createAccount(@Valid @ModelAttribute("account") AccountDTO accountDTO, BindingResult bindingResult, Model model ){
 
         if (bindingResult.hasErrors()){
 
@@ -50,8 +50,8 @@ public class AccountController {
             return "account/create-account";
         }
 
-        System.out.println(account);
-        accountService.createNewAccount(account.getBalance(), new Date(), account.getAccountType(), account.getUserId());
+        System.out.println(accountDTO);
+        accountService.createNewAccount(accountDTO.getBalance(), new Date(), accountDTO.getAccountType(), accountDTO.getUserId());
         return "redirect:/index";
     }
 

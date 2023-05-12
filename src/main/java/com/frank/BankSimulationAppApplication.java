@@ -1,15 +1,10 @@
 package com.frank;
 
-import com.frank.enums.AccountType;
-import com.frank.model.Account;
 import com.frank.service.AccountService;
 import com.frank.service.TransactionService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-
-import java.math.BigDecimal;
-import java.util.Date;
 
 @SpringBootApplication
 public class BankSimulationAppApplication {
