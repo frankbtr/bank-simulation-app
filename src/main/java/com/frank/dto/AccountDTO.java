@@ -1,20 +1,20 @@
-package com.frank.model;
+package com.frank.dto;
 
 import com.frank.enums.AccountStatus;
 import com.frank.enums.AccountType;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.UUID;
 
-@Data
-@Builder
-public class Account {
-    private UUID id;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class AccountDTO {
+    private Long id;
     @NotNull
     @Positive
     private BigDecimal balance;

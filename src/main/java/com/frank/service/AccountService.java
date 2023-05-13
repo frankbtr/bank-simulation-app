@@ -1,22 +1,21 @@
 package com.frank.service;
 
+import com.frank.dto.AccountDTO;
 import com.frank.enums.AccountType;
-import com.frank.model.Account;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public interface AccountService {
 
-    Account createNewAccount(BigDecimal balance, Date creationDate, AccountType accountType, Long userId);
+    void createNewAccount(AccountDTO accountDTO);
 
-    List<Account> listAllAccount();
+    List<AccountDTO> listAllAccount();
 
-    void deleteAccount(UUID id);
+    void deleteAccount(Long id);
 
-    void activateAccount(UUID id);
+    void activateAccount(Long id);
 
-    Account retrieveById(UUID Id);
+    AccountDTO retrieveById(Long Id);
 }
