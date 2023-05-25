@@ -1,6 +1,7 @@
 package com.frank.service.impl;
 
 import com.frank.dto.AccountDTO;
+import com.frank.entity.Account;
 import com.frank.enums.AccountStatus;
 import com.frank.enums.AccountType;
 import com.frank.mapper.AccountMapper;
@@ -8,6 +9,7 @@ import com.frank.repository.AccountRepository;
 import com.frank.service.AccountService;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Convert;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -52,20 +54,34 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteAccount(Long id) {
         //find the account object based on id
-        AccountDTO accountDTO = accountRepository.findById(id);
+        Account account = accountRepository.findById(id).get();
 
         //update the account status from active to deleted
-        accountDTO.setAccountStatus(AccountStatus.DELETED);
+        account.setAccountStatus(AccountStatus.DELETED);
     }
 
     @Override
     public void activateAccount(Long id) {
-        AccountDTO accountDTO = accountRepository.findById(id);
-        accountDTO.setAccountStatus(AccountStatus.ACTIVE);
+        Account account = accountRepository.findById(id).get();
+        account.setAccountStatus(AccountStatus.ACTIVE);
     }
 
     @Override
     public AccountDTO retrieveById(Long Id) {
-        return accountRepository.findById(Id);
+        return accountMapper.convertToDTO(accountRepository.findById(Id).get());
+    }
+
+    @Override
+    public List<AccountDTO> listAllActiveAccounts() {
+        //We need active accounts from repository
+        List<Account> accountList = accountRepository.findAllByAccountStatus(AccountStatus.ACTIVE);
+
+
+        return accountList.stream().map(accountMapper::convertToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateAccount(AccountDTO accountDTO) {
+        accountRepository.save(accountMapper.convertToEntity(accountDTO));
     }
 }

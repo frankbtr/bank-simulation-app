@@ -7,8 +7,9 @@ import com.frank.exceptions.AccountOwnershipException;
 import com.frank.exceptions.BadRequestException;
 import com.frank.exceptions.BalanceNotSufficientException;
 import com.frank.exceptions.UnderConstructionException;
-import com.frank.repository.AccountRepository;
+import com.frank.mapper.TransactionMapper;
 import com.frank.repository.TransactionRepository;
+import com.frank.service.AccountService;
 import com.frank.service.TransactionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class TransactionServiceImpl implements TransactionService {
@@ -24,12 +26,14 @@ public class TransactionServiceImpl implements TransactionService {
     @Value("${under_construction}")
     private boolean underConstruction;
 
-    private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
+    private final AccountService accountService;
+    private final TransactionMapper transactionMapper;
 
-    public TransactionServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository) {
-        this.accountRepository = accountRepository;
+    public TransactionServiceImpl(TransactionRepository transactionRepository, AccountService accountService, TransactionMapper transactionMapper) {
         this.transactionRepository = transactionRepository;
+        this.accountService = accountService;
+        this.transactionMapper = transactionMapper;
     }
 
     @Override
@@ -43,9 +47,10 @@ public class TransactionServiceImpl implements TransactionService {
             after all validations are completed, and money is transferred, we need to  create Transaction object and save/return it.
          */
 
-            TransactionDTO transactionDTO = new TransactionDTO();
+            TransactionDTO transactionDTO = new TransactionDTO(sender, receiver, amount, message, creationDate);
 
-            return transactionRepository.save(transactionDTO);
+            transactionRepository.save(transactionMapper.convertToEntity(transactionDTO));
+            return transactionDTO;
 
         } else {
             throw new UnderConstructionException("App is under construction,try again later.");
@@ -59,6 +64,14 @@ public class TransactionServiceImpl implements TransactionService {
             //update sender and receiver balance
             sender.setBalance(sender.getBalance().subtract(amount));
             receiver.setBalance(receiver.getBalance().add(amount));
+
+            AccountDTO senderAcc = accountService.retrieveById(sender.getId());
+            senderAcc.setBalance(sender.getBalance());
+            accountService.updateAccount(senderAcc);
+
+            AccountDTO receiverAcc = accountService.retrieveById(receiver.getId());
+            receiverAcc.setBalance(receiver.getBalance());
+            accountService.updateAccount(receiverAcc);
 
         } else {
             throw new BalanceNotSufficientException("Balance is not enough for this transfer.");
@@ -105,24 +118,24 @@ public class TransactionServiceImpl implements TransactionService {
 
     }
 
-    private void findAccountById(Long id) {
-        accountRepository.findById(id);
+    private AccountDTO findAccountById(Long id) {
+        return accountService.retrieveById(id);
     }
 
     @Override
     public List<TransactionDTO> findAllTransaction() {
-        return transactionRepository.findAll();
+        return transactionRepository.findAll().stream().map(transactionMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<TransactionDTO> last10Transactions() {
         //we want last 10 latest transaction
-        return transactionRepository.findLast10Transaction();
+        return transactionRepository.findLast10Transaction().stream().map(transactionMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<TransactionDTO> findTransactionListById(Long id) {
-        return transactionRepository.findTransactionListById(id);
+        return transactionRepository.findTransactionListById(id).stream().map(transactionMapper::convertToDTO).collect(Collectors.toList());
     }
 
 }

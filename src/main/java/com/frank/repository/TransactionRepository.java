@@ -3,6 +3,7 @@ package com.frank.repository;
 import com.frank.dto.TransactionDTO;
 import com.frank.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -13,29 +14,9 @@ import java.util.stream.Collectors;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+    @Query(value = "SELECT * FROM transactions ORDER BY transaction_date DESC LIMIT 10", nativeQuery = true)
+    List<Transaction> findLast10Transaction();
 
-//    public static List<TransactionDTO> transactionDTOList = new ArrayList<>();
-//
-//    public TransactionDTO save(TransactionDTO transactionDTO){
-//        transactionDTOList.add(transactionDTO);
-//        return transactionDTO;
-//    }
-//
-//    public List<TransactionDTO> findAll() {
-//        return transactionDTOList;
-//    }
-//
-//    public List<TransactionDTO> findLast10Transaction() {
-//        //write a stream that sort the transaction based on creation date
-//        //and only return 10 of them
-//        return transactionDTOList.stream()
-//                .sorted(Comparator.comparing(TransactionDTO::getCreationDate).reversed())
-//                .limit(10).collect(Collectors.toList());
-//    }
-//
-//    public List<TransactionDTO> findTransactionListById(Long id) {
-//        return transactionDTOList.stream().filter(transactionDTO -> transactionDTO.getSender().equals(id)
-//                || transactionDTO.getReceiver().equals(id))
-//                .collect(Collectors.toList());
-//    }
+    @Query("SELECT t FROM Transaction t WHERE t.sender.id = ?1 OR t.receiver.id=?1")
+    List<Transaction> findTransactionListById(Long id);
 }
