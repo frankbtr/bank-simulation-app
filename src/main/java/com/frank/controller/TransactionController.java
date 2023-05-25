@@ -31,9 +31,9 @@ public class TransactionController {
 
         //what we need to provide to make transfer happen
         //we need to provide empty transfer object
-        model.addAttribute("transaction", new TransactionDTO());
+        model.addAttribute("transactionDTO", new TransactionDTO());
         //we need all accounts to provide them as sender, receiver
-        model.addAttribute("accounts", accountService.listAllAccount());
+        model.addAttribute("accounts", accountService.listAllActiveAccounts());
         //we need list of transaction(at least 10) to fill table,(business logic is missing)
         model.addAttribute("lastTransactions", transactionService.last10Transactions());
 
@@ -44,7 +44,7 @@ public class TransactionController {
     //Write a post method, that takes transaction object from the method above
     //complete the make transfer and return the message
     @PostMapping("/transfer")
-    public String postMakeTransfer(@Valid @ModelAttribute("transaction") TransactionDTO transactionDTO, BindingResult bindingResult, Model model){
+    public String postMakeTransfer(@Valid @ModelAttribute("transactionDTO") TransactionDTO transactionDTO, BindingResult bindingResult, Model model){
 
         if (bindingResult.hasErrors()){
             model.addAttribute("accounts", accountService.listAllAccount());
