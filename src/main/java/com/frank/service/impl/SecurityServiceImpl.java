@@ -6,7 +6,9 @@ import com.frank.repository.UserRepository;
 import com.frank.service.SecurityService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SecurityServiceImpl implements SecurityService {
 
     private final UserRepository userRepository;
